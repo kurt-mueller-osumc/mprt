@@ -31,17 +31,14 @@ module Input =
 
             /// <summary>
             /// Validates the MedicalId based on specific business rules.
-            /// </summary>
-            /// <remarks>
+            ///
             /// The validation checks for the following conditions:
-            /// <list type="bullet">
-            /// <item>The ID is not null or whitespace.</item>
-            /// <item>The ID is exactly 12 characters long.</item>
-            /// <item>The ID contains only digits.</item>
-            /// </list>
-            /// </remarks>
+            /// * The ID is not null or whitespace.
+            /// * The ID is exactly 12 characters long.
+            /// * The ID contains only digits.
+            /// </summary>
             /// <returns>
-            /// A <c>Result</c> containing the validated <c>Domain.Patient.MedicalId</c> on success,
+            /// A `Result` containing the validated `Domain.Patient.MedicalId` on success,
             /// or a list of error messages on failure.
             /// </returns>
             member this.Validate() : Result<Domain.Patient.MedicalId, string list> =
@@ -66,6 +63,13 @@ module Input =
         type EstimatedDeliveryDate =
             | EstimatedDeliveryDate of DateTime
 
+            /// Validates the EstimatedDeliveryDate.
+            /// The date must be in the future but no more than 280 days from the current date.
+            /// </summary>
+            /// <returns>
+            /// A `Result` containing the validated `Domain.Patient.EstimatedDeliveryDate` on success,
+            /// or a list of error strings on failure.
+            /// </returns>
             member this.Validate() : Result<Domain.Patient.EstimatedDeliveryDate, string list> =
                 match this with
                 | EstimatedDeliveryDate date ->
