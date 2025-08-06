@@ -27,6 +27,21 @@ module Input =
         type MedicalId =
             | MedicalId of string
 
+            /// <summary>
+            /// Validates the MedicalId based on specific business rules.
+            /// </summary>
+            /// <remarks>
+            /// The validation checks for the following conditions:
+            /// <list type="bullet">
+            /// <item>The ID is not null or whitespace.</item>
+            /// <item>The ID is exactly 12 characters long.</item>
+            /// <item>The ID contains only digits.</item>
+            /// </list>
+            /// </remarks>
+            /// <returns>
+            /// A <c>Result</c> containing the validated <c>Domain.Patient.MedicalId</c> on success,
+            /// or a list of error messages on failure.
+            /// </returns>
             member this.Validate() : Result<Domain.Patient.MedicalId, string list> =
                 match this with
                 | MedicalId id ->
