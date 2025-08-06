@@ -22,6 +22,8 @@ module Domain =
     module Patient =
         type MedicalId = internal MedicalId of string
 
+        type EstimatedDeliveryDate = internal EstimatedDeliveryDate of DateTime
+
 module Input =
     module Patient =
         type MedicalId =
@@ -58,5 +60,25 @@ module Input =
 
                     if errors.Count = 0 then
                         Ok <| Domain.Patient.MedicalId id
+                    else
+                        Error(errors |> List.ofSeq)
+
+        type EstimatedDeliveryDate =
+            | EstimatedDeliveryDate of DateTime
+
+            member this.Validate() : Result<Domain.Patient.EstimatedDeliveryDate, string list> =
+                match this with
+                | EstimatedDeliveryDate date ->
+                    let errors = ResizeArray<string>()
+                    let maxFutureDate = DateTime.Now.AddDays 280.0
+
+                    if date < DateTime.Now then
+                        errors.Add "Estimated delivery date must be in the future"
+
+                    else if date > maxFutureDate then
+                        errors.Add "Estimated delivery date cannot be more than 280 days in the future"
+
+                    if errors.Count = 0 then
+                        Ok <| Domain.Patient.EstimatedDeliveryDate date
                     else
                         Error(errors |> List.ofSeq)
