@@ -19,15 +19,75 @@ type ITodosApi = {
 }
 
 module Domain =
+    type YesNoOptions =
+        | Yes
+        | No
+
     module Patient =
         type MedicalId = internal MedicalId of string
 
         type EstimatedDeliveryDate = internal EstimatedDeliveryDate of DateTime
 
+        type Ethnicity =
+            | ``Not Hispanic or Latino``
+            | ``Hispanic or Latino``
+            | ``Chose Not to Answer``
+
+        type Fetuses =
+            | One = 1
+            | Two = 2
+            | Three = 3
+            | Four = 4
+
+        type AvailableCoverages =
+            | ``Aetna MyCare``
+            | ``AmeriHealth``
+            | ``Anthem``
+            | ``Buckeye``
+            | ``CareSource``
+            | ``Humana``
+            | ``Molina``
+            | ``United Healthcare Community Plan``
+            | ``Traditional Medicaid``
+
+        type Address = {
+            Street: string
+            City: string
+            State: string
+            ZipCode: string
+        }
+
+        type OtherNeeds =
+            | ``Prenatal Anemia``
+            | ``Cervical Shortening``
+            | ``Congenital Anomaly``
+            | ``High Risk Pregnancy``
+            | ``Pregnancy with Multiples``
+            | ``Prepregnancy Diabetes``
+            | ``Poor Fetal Growth``
+            | ``Prepregnancy Hypertension``
+            | ``Previous Preterm Birth``
+            | ``Poor Pregnancy Outcome``
+            | ``Severe Mental Illness``
+
+    type Patient = {
+        MMIS: Patient.MedicalId
+        DateOfGestationalAgeIssuance: DateOnly
+        EncounterDate: DateOnly
+        EstimatedDateOfConfinement: DateOnly
+        EnglishAsPrimaryLanguage: YesNoOptions
+        Ethnicity: Patient.Ethnicity
+        Fetuses: Patient.Fetuses
+        AvailableCoverages: Patient.AvailableCoverages
+        OtherNeeds: Patient.OtherNeeds list
+        DateOfBirth: DateOnly
+        FirstName: string
+        LastName: string
+    }
+
 module Input =
     module Patient =
-        type MedicalId =
-            | MedicalId of string
+        type Domain.Patient.MedicalId with
 
             /// <summary>
             /// Validates the MedicalId based on specific business rules.
@@ -43,7 +103,7 @@ module Input =
             /// </returns>
             member this.Validate() : Result<Domain.Patient.MedicalId, string list> =
                 match this with
-                | MedicalId id ->
+                | Domain.Patient.MedicalId id ->
                     let errors = ResizeArray<string>()
 
                     if String.IsNullOrWhiteSpace id then
